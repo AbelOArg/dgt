@@ -1,0 +1,26 @@
+{% extends 'menu.html' %}
+
+{% block titulo %}Buscar empleado{% endblock %}
+
+{% block contenido %}
+{% if messages %}
+    {% for message in messages %}
+        <p class="mensaje {{ message.tags }}">
+            {{ message }}
+        </p>
+    {% endfor %}
+{% endif %}
+
+<div class="card">
+    <div class="card-body">
+        <h4 class="card-title">Buscar empleado para editar</h4>
+        <form enctype="multipart/form-data" method="post">
+            {% csrf_token %}
+            <label>Afiliado</label>
+            <input type="number" name="afiliado" required>
+            <button  type="submit">Buscar</button>
+        </form>
+
+    </div>
+</div>
+{% endblock %}
