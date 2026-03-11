@@ -1,0 +1,36 @@
+{% extends "menu.html" %}
+
+{% block titulo %}Modificar empleado{% endblock %}
+
+{% block contenido %}
+<div class="card">
+    <div class="card-header">Modificar datos del empleado</div>
+    <div class="card-body">
+        <h4 class="card-title">
+            {{ empleado.apellido }}, {{ empleado.nombre }}
+            {% if not empleado.is_active %}
+                <span style="color:red;">(INACTIVO)</span>
+            {% endif %}
+        </h4>
+
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+
+            <button type="submit" class="btn btn-primary" name="action" value="guardar">
+                Guardar cambios
+            </button>
+
+            {% if empleado.is_active %}
+                <button type="submit" class="btn btn-danger" name="action" value="desactivar">
+                    Desactivar
+                </button>
+            {% else %}
+                <button type="submit" class="btn btn-success" name="action" value="activar">
+                    Activar
+                </button>
+            {% endif %}
+        </form>
+    </div>
+</div>
+{% endblock %}
