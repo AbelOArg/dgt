@@ -1,17 +1,17 @@
-{% extends 'menu.html' %}
+{% extends "menu.html" %}
 
-{% block titulo %}Buscar empleado{% endblock %}
+{% block titulo %}Datos del empleado{% endblock %}
 
 {% block contenido %}
 {% if messages %}
     {% for message in messages %}
-        <p class="mensaje {{ message.tags }}">{{ message }}</p>
+        <p class="alert alert-info {{ message.tags }}">{{ message }}</p>
     {% endfor %}
 {% endif %}
 
-<div class="card">
+    <div class="card">
     <div class="card-body">
-        <h4 class="card-title">Buscar empleado para editar</h4>
+        <h4 class="card-title">Buscar empleado por numero de afiliado</h4>
 
         <form method="get">
             <label>Afiliado</label>
@@ -23,7 +23,7 @@
                 <label for="incluir_inactivos">Incluir empleados inactivos</label>
             </div>
 
-            <button type="submit" class="btn btn-primary">Buscar</button>
+            <button class="btn btn-primary" type="submit">Buscar</button>
         </form>
     </div>
 </div>

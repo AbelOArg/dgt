@@ -16,3 +16,13 @@ class empleado(models.Model):
 
     def __str__(self):
         return f"{self.apellido}, {self.nombre} - Afiliado: {self.afiliado} - seccion: {self.seccion} - turno: {self.turno} - reparticion: {self.reparticion} - activo: {self.is_active}"
+    
+
+class horastrabajadasxdescando(models.Model):
+    id_horas = models.AutoField(primary_key=True)
+    empleado = models.ForeignKey(empleado, on_delete=models.CASCADE, verbose_name='Empleado')
+    fecha = models.DateField(verbose_name='Fecha')
+    horas_trabajadas = models.IntegerField(verbose_name='Horas trabajadas')
+
+    def __str__(self):
+        return f"Empleado: {self.empleado} - Fecha: {self.fecha} - Horas trabajadas: {self.horas_trabajadas}"

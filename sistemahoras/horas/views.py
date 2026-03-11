@@ -18,53 +18,92 @@ def altaempleado(request):
     formulario = empleadoForm(request.POST or None)
     if formulario.is_valid():
         formulario.save()
-        mensaje = "Empleado dado de alta correctamente"
-        return render(request,'paginas/empleados/altaempleado.html',{'formulario':empleadoForm(), 'mensaje': mensaje})
+        messages.success(request, "Empleado dado de alta correctamente")
+        return render(request,'paginas/empleados/altaempleado.html',{'formulario':empleadoForm()})
     return render(request,'paginas/empleados/altaempleado.html',{'formulario':formulario})
 
 def buscarempleado(request):
-    if request.method == 'POST':
-        afiliado = request.POST.get('afiliado')
-        persona = empleado.objects.filter(afiliado=afiliado, is_active=True).first()
+    afiliado = request.GET.get('afiliado')
+    incluir_inactivos = request.GET.get('incluir_inactivos')
+
+    if afiliado:
+        queryset = empleado.objects.filter(afiliado=afiliado)
+
+        if not incluir_inactivos:
+            queryset = queryset.filter(is_active=True)
+
+        persona = queryset.first()
 
         if persona:
-            return redirect("horas:modificarempleado",afiliado = persona.afiliado)
+            return redirect('horas:modificarempleado', afiliado=persona.afiliado)
         else:
-            messages.error(request,'No se encontro empleado con ese numero de afiliado')
-    
-    return render(request,'paginas/empleados/buscarempleado.html')
+            messages.error(request, 'No se encontró empleado con ese número de afiliado')
 
+    return render(request, 'paginas/empleados/buscarempleado.html')
 
+def mostrarempleado(request, afiliado):
+    persona = get_object_or_404(empleado, afiliado=afiliado)
+    form = empleadoForm(instance=persona)
+    return render(request, 'paginas/empleados/mostrarempleado.html', {'empleado': persona, 'form': form})
 
-def modificarempleado(request,afiliado):
-    persona = get_object_or_404(empleado,afiliado = afiliado)
+def modificarempleado(request, afiliado):
+    persona = get_object_or_404(empleado, afiliado=afiliado)
 
     if request.method == "POST":
         action = request.POST.get("action")
-        if action == "delete":
-            persona.is_active = False
-            persona.save()
-            messages.success(request,'Empleado eliminado con exito')
-            return redirect('horas:buscarempleado')
 
-        
+        if action == "guardar":
             form = empleadoForm(request.POST, instance=persona)
             if form.is_valid():
                 form.save()
-                messages.success(request,'Empleado modificado con exito')
+                messages.success(request, 'Empleado modificado con éxito')
                 return redirect('horas:buscarempleado')
+
+        elif action == "desactivar":
+            persona.is_active = False
+            persona.save()
+            messages.success(request, 'Empleado desactivado con éxito')
+            return redirect('horas:buscarempleado')
+
+        elif action == "activar":
+            persona.is_active = True
+            persona.save()
+            messages.success(request, 'Empleado reactivado con éxito')
+            return redirect('horas:modificarempleado', afiliado=persona.afiliado)
+
     else:
         form = empleadoForm(instance=persona)
 
-    return render(request, "paginas/empleados/modificarempleado.html", {
-        "form": form,
-        "empleado": persona
+    return render(request, 'paginas/empleados/modificarempleado.html', {
+        'form': form,
+        'empleado': persona
     })
+
     
 
-def verdatos(request):
-    return render(request,'paginas/empleados/verdatos.html')
+def verdatosbuscar(request):
+    afiliado = request.GET.get('afiliado')
+    incluir_inactivos = request.GET.get('incluir_inactivos')
 
+    if afiliado:
+        queryset = empleado.objects.filter(afiliado=afiliado)
+
+        if not incluir_inactivos:
+            queryset = queryset.filter(is_active=True)
+        persona = queryset.first()
+
+        if persona:
+                
+            return redirect('horas:mostrarempleado', afiliado=persona.afiliado)
+
+        else:
+            messages.error(request, 'No se encontró empleado con ese número de afiliado')
+
+    return render(request, 'paginas/empleados/verdatosbuscar.html')
+
+def tipodecarga(request):
+    return render(request,'paginas/tipodecarga.html')
+    
 def descaso(request):
     return render(request,'paginas/reportes/descanso.html')
 

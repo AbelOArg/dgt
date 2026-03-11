@@ -43,7 +43,7 @@
                                     <li><a class="dropdown-item" href="{% url 'horas:altaempleado' %}">Nuevo</a></li>
                                     <li><a class="dropdown-item" href="{% url 'horas:buscarempleado' %}">Modificar</a></li>
                                     <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item" href="{% url 'horas:verdatos' %}">Ver Datos</a></li>
+                                    <li><a class="dropdown-item" href="{% url 'horas:verdatosbuscar' %}">Ver Datos</a></li>
                                 </ul>
                             </li>
                             <li class="nav-item dropdown">
@@ -58,10 +58,13 @@
                                 </ul>
                             </li>
                             <li class="nav-item">
-                                <button type="button" class="btn btn-primary">Cargar Horas</button>
+                                <form action="{% url 'horas:tipodecarga' %}" method="get">
+                                    <button type="submit" class="btn btn-primary">Cargar Horas</button>
+                                </form>
+                                
                             </li>
                         </ul>
-                        <form class="d-flex" role="search">
+                        <form class="d-flex" role="search" >
                             <span class="badge" style="margin-right: 10px; font-size: large;">Consulte aqui sus horas con su número de afiliado</span>
                             <input class="form-control me-2" type="search" placeholder="Número de afiliado" aria-label="Search"/>
                             <button class="btn btn-primary" type="submit">Buscar</button>
